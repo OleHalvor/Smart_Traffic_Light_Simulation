@@ -1,0 +1,34 @@
+Class:
+	traffic_light:
+		isGreen = bool
+		CarCounterA = int
+		carCounterB = int
+		SpawnChanceA = float
+		SpawnChanceB = float
+		overlapTime = int
+		pedestrianCounter = int
+		minimumTimeSteps = int
+		greenCounter = int #How many timesteps has passed while light has been green.
+		leftNeighbour = traffic_light object
+		rightNeighbours = traffic_light object
+		utility_function = function()
+
+Class:
+	Utility:
+		Lots of cool utilities
+
+MainFile:
+lights = createTrafficLights(n)
+utilityFunction = Utility.function()
+While timestep < something:
+	For light in lights:
+		lightsToBeEvaluated = []
+		if (light.isGreen==true) and (light.greencounter < light.minimumTimeSteps):
+			light.moveCars()
+		elif (light.isGreen==true) and (light.greencounter >= light.minimumTimeSteps):
+			lightsToBeEvaluated.append(light)
+		else:
+			Move pedestrian(s)
+	if lightsToBeEvaluated:
+		for light in lightsToBeEvaluated:
+			light.evaluate()
