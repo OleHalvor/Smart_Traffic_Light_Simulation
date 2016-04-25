@@ -29,7 +29,10 @@ while timestep < 100:
 			lightsToEvaluate.append(light)
 		else:
 			light.move()
+
 	if lightsToEvaluate:
 		for light in lightsToEvaluate:
 			light.evaluateChange
+		lightsToEvaluate = []
+
 	timestep += 1
