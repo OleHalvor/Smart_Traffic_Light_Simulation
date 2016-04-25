@@ -3,21 +3,22 @@ import trafficlight as TL
 import utility as UTIL
 
 # -- Default values --
-overlapTime      = 2
-minimumTimeSteps = 20
-spawnChanceLeft  = 0.5
-spawnChanceRight = 0.5
+overlapTime           = 2
+minimumTimeSteps      = 20
+spawnChanceLeft       = 0.2
+spawnChanceRight      = 0.6
+spawnPedestrianChance = 0.5
 # -- Default values --
 
 def createTrafficLights(n):
 	lightList = []
 	for i in range(n):
 		if i == 0:
-			lightList.append(TL.trafficLight(UTIL.leftmost_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight))
-		if i == n-1:
-			lightList.append(TL.trafficLight(UTIL.rightmost_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight))
+			lightList.append(TL.trafficLight(UTIL.leftmost_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
+		elif i == n-1:
+			lightList.append(TL.trafficLight(UTIL.rightmost_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
 		else:
-			lightList.append(TL.trafficLight(UTIL.midle_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight))
+			lightList.append(TL.trafficLight(UTIL.midle_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
 		if (i>0): # If this is not the only light, set neighbours.
 			lightList[i].leftNeighbour      = lightList[i-1]
 			lightList[i].spawnChanceLeft    = 0
@@ -27,10 +28,14 @@ def createTrafficLights(n):
 
 lights = createTrafficLights(3)
 lightsToEvaluate = []
-
+print ("length of lights: ", len(lights))
+for l in lights:
+	print (l.rightNeighbour)
 
 timestep = 0
 while timestep < 100:
+	print (lights[0].isGreen, lights[1].isGreen, lights[2].isGreen)
+	print (lights[0].carCounterRight, lights[1].carCounterRight, lights[2].carCounterRight)
 	for light in lights:
 		if (light.stepCounter >= light.minimumTimeSteps):
 			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
