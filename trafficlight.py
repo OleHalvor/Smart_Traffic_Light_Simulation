@@ -24,34 +24,34 @@ class trafficLight:
 
 	def evaluateChange(self):
 		if self.isGreen:
-			isGreen = False
+			self.isGreen = False
 		else:
-			isGreen = True
+			self.isGreen = True
+		self.stepCounter = 0
 
 	def spawnEntities(self):
-		if spawnChanceLeft > 0:
-			if (rng.random() < spawnChanceLeft):
+		if self.spawnChanceLeft > 0:
+			if (rng.random() < self.spawnChanceLeft):
 				self.CarCounterLeft    += 1
-		if spawnChanceRight > 0:
-			if (rng.random() < spawnChanceRight):
+		if self.spawnChanceRight > 0:
+			if (rng.random() < self.spawnChanceRight):
 				self.carCounterRight   += 1
-		if spawnPedestrianChance > 0:
-			if (rng.random() < spawnPedestrianChance):
+		if self.spawnPedestrianChance > 0:
+			if (rng.random() < self.spawnPedestrianChance):
 				self.pedestrianCounter += 1
-
-
 
 	def move(self):
 		if self.isGreen:
-			if CarCounterLeft  >= 1:
-				CarCounterLeft -= 1
-				if rightNeighbour:
-					rightNeighbour.CarCounterLeft += 1
-			if carCounterRight  >= 1:
-				carCounterRight -= 1
-				if leftNeighbour:
-					leftNeighbour.carCounterRight += 1
+			if self.CarCounterLeft  >= 1:
+				self.CarCounterLeft -= 1
+				if self.rightNeighbour:
+					self.rightNeighbour.CarCounterLeft += 1
+			if self.carCounterRight  >= 1:
+				self.carCounterRight -= 1
+				if self.leftNeighbour:
+					self.leftNeighbour.carCounterRight += 1
 		else:
-			pedestrianCounter = 0
+			self.pedestrianCounter = 0
+		self.stepCounter += 1
 
 
