@@ -20,15 +20,19 @@ def createTrafficLights(n):
 			lightList[i-1].spawnChanceRight = 0
 	return lightList
 
-lights = createTrafficLights(3)
+lights = createTrafficLights()
 lightsToEvaluate = []
 
+timestep = 0
 while timestep < 100:
 	for light in lights:
 		if (light.stepCounter >= light.minimumTimeSteps):
 			lightsToEvaluate.append(light)
 		else:
 			light.move()
+
+	for light in lights:
+		light.spawnEntities()
 
 	if lightsToEvaluate:
 		for light in lightsToEvaluate:
