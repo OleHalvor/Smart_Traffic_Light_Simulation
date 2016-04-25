@@ -1,7 +1,7 @@
 #MainloopfileYOLOSWAG
 import trafficlight as TL
 import utility as UTIL
-
+import time
 # -- Default values --
 overlapTime           = 2
 minimumTimeSteps      = 20
@@ -33,9 +33,13 @@ for l in lights:
 	print (l.rightNeighbour)
 
 timestep = 0
-while timestep < 100:
+while timestep < 10000:
+	time.sleep(1)
+	print("")
 	print (lights[0].isGreen, lights[1].isGreen, lights[2].isGreen)
-	print (lights[0].carCounterRight, lights[1].carCounterRight, lights[2].carCounterRight)
+	print (lights[0].carCounterRight,"    ", lights[1].carCounterRight,"    ", lights[2].carCounterRight, "Right lane cars")
+	print (lights[0].carCounterLeft,"    ", lights[1].carCounterLeft,"    ", lights[2].carCounterLeft, "Left lane cars")
+	print (lights[0].pedestrianCounter,"    ", lights[1].pedestrianCounter,"    ", lights[2].pedestrianCounter, "Pedestrians")
 	for light in lights:
 		if (light.stepCounter >= light.minimumTimeSteps):
 			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
