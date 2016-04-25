@@ -4,6 +4,7 @@ class trafficLight:
 	carCounterRight   = 0
 	spawnChanceLeft   = 0.0
 	spawnChanceRight  = 0.0
+	spawnPedestrianChance = 0.0
 	overlapTime       = 0
 	pedestrianCounter = 0
 	minimumTimeSteps  = 0
