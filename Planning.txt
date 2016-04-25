@@ -1,17 +1,17 @@
 Class:
 	traffic_light:
-		isGreen = bool
-		CarCounterA = int
-		carCounterB = int
-		SpawnChanceA = float
-		SpawnChanceB = float
-		overlapTime = int
+		isGreen           = bool
+		CarCounterA       = int
+		carCounterB       = int
+		SpawnChanceA      = float
+		SpawnChanceB      = float
+		overlapTime       = int
 		pedestrianCounter = int
-		minimumTimeSteps = int
-		greenCounter = int #How many timesteps has passed while light has been green.
-		leftNeighbour = traffic_light object
-		rightNeighbours = traffic_light object
-		utility_function = function()
+		minimumTimeSteps  = int
+		greenCounter      = int #How many timesteps has passed while light has been green.
+		leftNeighbour     = traffic_light object
+		rightNeighbours   = traffic_light object
+		utility_function  = function()
 
 Class:
 	Utility:
