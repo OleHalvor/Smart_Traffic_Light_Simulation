@@ -1,1 +1,2 @@
-#This should contain some utility function
+def test():
+	return 10
