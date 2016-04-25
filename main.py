@@ -12,7 +12,12 @@ spawnChanceRight = 0.5
 def createTrafficLights(n):
 	lightList = []
 	for i in range(n):
-		lightList.append(TL.trafficLight(UTIL.test(),overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight))
+		if i == 0:
+			lightList.append(TL.trafficLight(UTIL.leftmost_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight))
+		if i == n-1:
+			lightList.append(TL.trafficLight(UTIL.rightmost_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight))
+		else:
+			lightList.append(TL.trafficLight(UTIL.midle_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight))
 		if (i>0): # If this is not the only light, set neighbours.
 			lightList[i].leftNeighbour      = lightList[i-1]
 			lightList[i].spawnChanceLeft    = 0
