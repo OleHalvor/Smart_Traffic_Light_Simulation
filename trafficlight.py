@@ -8,8 +8,6 @@ class trafficLight:
 	pedestrianCounter = 0
 	minimumTimeSteps  = 0
 	stepCounter       = 0
-	leftNeighbour     = None
-	rightNeighbour    = None
 	utility_function  = None #Function?
 
 	def __init__(self, utility_function, overlapTime, minimumTimeSteps, spawnChanceLeft, spawnChanceRight):
@@ -18,3 +16,10 @@ class trafficLight:
 		self.minimumTimeSteps = minimumTimeSteps
 		self.spawnChanceLeft = spawnChanceLeft
 		self.spawnChanceRight = spawnChanceRight
+
+	def evaluateChange(self):
+		pass
+
+	def move(self):
+		pass
+
