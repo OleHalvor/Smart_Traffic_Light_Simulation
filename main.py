@@ -5,8 +5,8 @@ import time
 # -- Default values --
 overlapTime           = 2
 minimumTimeSteps      = 20
-spawnChanceLeft       = 0.2
-spawnChanceRight      = 0.6
+spawnChanceLeft       = 0.5
+spawnChanceRight      = 0.5
 spawnPedestrianChance = 0.5
 # -- Default values --
 
@@ -34,7 +34,7 @@ for l in lights:
 
 timestep = 0
 while timestep < 10000:
-	time.sleep(1)
+	time.sleep(0.2)
 	print("")
 	print (lights[0].isGreen, lights[1].isGreen, lights[2].isGreen)
 	print (lights[0].carCounterRight,"    ", lights[1].carCounterRight,"    ", lights[2].carCounterRight, "Right lane cars")
