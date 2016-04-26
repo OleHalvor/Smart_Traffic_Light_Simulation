@@ -26,27 +26,40 @@ def createTrafficLights(n):
 			lightList[i-1].spawnChanceRight = 0
 	return lightList
 
-lights = createTrafficLights(3)
+def print_visualisation(lights):
+	s = ""
+	for l in lights:
+		s += '{:<6}'.format(str(l.isGreen))
+	print (s+" | Green light")
+	s = ""
+	for l in lights:
+		s += '{:<6}'.format(str(l.carCounterRight))
+	print (s+" | carCounterRight")
+	s = ""
+	for l in lights:
+		s += '{:<6}'.format(str(l.carCounterLeft))
+	print (s+" | carCounterLeft")
+	s = ""
+	for l in lights:
+		s += '{:<6}'.format(str(l.pedestrianCounter))
+	print (s+" | pedestrianCounter")
+	print("")
+
+lights = createTrafficLights(5)
 lightsToEvaluate = []
-print ("length of lights: ", len(lights))
-for l in lights:
-	print (l.rightNeighbour)
 
 timestep = 0
 while timestep < 10000:
-	time.sleep(0.2)
-	print("")
-	print (lights[0].isGreen, lights[1].isGreen, lights[2].isGreen)
-	print (lights[0].carCounterRight,"    ", lights[1].carCounterRight,"    ", lights[2].carCounterRight, "Right lane cars")
-	print (lights[0].carCounterLeft,"    ", lights[1].carCounterLeft,"    ", lights[2].carCounterLeft, "Left lane cars")
-	print (lights[0].pedestrianCounter,"    ", lights[1].pedestrianCounter,"    ", lights[2].pedestrianCounter, "Pedestrians")
+	time.sleep(0.1)
+	print_visualisation(lights)
+	for light in lights:
+		light.spawnEntities() # Spawns cars and pedestrians
 	for light in lights:
 		if (light.stepCounter >= light.minimumTimeSteps):
 			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
 		else:
 			light.move() # Light moves cars or pedestrians
-	for light in lights:
-		light.spawnEntities() # Spawns cars and pedestrians
+
 	if lightsToEvaluate:
 		for light in lightsToEvaluate:
 			light.evaluateChange() # Gives each light hat has run the given timesteps to evaluate if it should have green or red light

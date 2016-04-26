@@ -28,6 +28,10 @@ class trafficLight:
 			self.isGreen = True
 		else:
 			self.isGreen = False
+		# if self.isGreen:
+		# 	self.isGreen = False
+		# else:
+		# 	self.isGreen = True
 		self.stepCounter = 0
 
 	def spawnEntities(self):
