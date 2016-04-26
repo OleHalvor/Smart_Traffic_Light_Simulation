@@ -18,7 +18,7 @@ class trafficLight:
 	def __init__(self, utility_function, overlapTime, minimumTimeSteps, spawnChanceLeft, spawnChanceRight, spawnPedestrianChance):
 		self.utility_function      = utility_function
 		self.overlapTime           = overlapTime
-		self.minimumTimeSteps      = minimumTimeSteps
+		self.minimumTimeSteps      = minimumTimeSteps + (rng.random()*4)
 		self.spawnChanceLeft       = spawnChanceLeft
 		self.spawnChanceRight      = spawnChanceRight
 		self.spawnPedestrianChance = spawnPedestrianChance
@@ -34,30 +34,50 @@ class trafficLight:
 		# 	self.isGreen = True
 		self.stepCounter = 0
 
-	def spawnEntities(self):
+	def spawnEntities(self, timestep):
+		leftSpawn = 0
+		rightSpawn = 0
 		if self.spawnChanceLeft > 0:
 			if (rng.random() < self.spawnChanceLeft):
 				self.carCounterLeft    += 1
+				leftSpawn = timestep
 		if self.spawnChanceRight > 0:
 			if (rng.random() < self.spawnChanceRight):
 				self.carCounterRight   += 1
+				rightSpawn = timestep
 		if self.spawnPedestrianChance > 0:
 			if (rng.random() < self.spawnPedestrianChance):
 				self.pedestrianCounter += 1
+		return leftSpawn, rightSpawn
 
-	def move(self):
 
+
+	def move(self, timestep):
+		c = 0
+		rDep = 0
+		lDep = 0
 		if self.isGreen:
 			if self.carCounterLeft  >= 1:
 				self.carCounterLeft -= 1
+				c += 1
 				if self.rightNeighbour:
 					self.rightNeighbour.carCounterLeft += 1
+				else:
+					lDep = timestep
 			if self.carCounterRight  >= 1:
 				self.carCounterRight -= 1
+				c += 1
 				if self.leftNeighbour:
 					self.leftNeighbour.carCounterRight += 1
+				else:
+					rDep = timestep
+
 		else:
 			self.pedestrianCounter = 0
+			c = 3
 		self.stepCounter += 1
+		return c, lDep, rDep
+
+
 
 

@@ -4,9 +4,9 @@ import utility as UTIL
 import time
 # -- Default values --
 overlapTime           = 2
-minimumTimeSteps      = 20
-spawnChanceLeft       = 0.5
-spawnChanceRight      = 0.5
+minimumTimeSteps      = 18
+spawnChanceLeft       = 0.3
+spawnChanceRight      = 0.3
 spawnPedestrianChance = 0.5
 # -- Default values --
 
@@ -47,21 +47,59 @@ def print_visualisation(lights):
 
 lights = createTrafficLights(5)
 lightsToEvaluate = []
+totalThroughCars = 0
+totalThroughPed = 0
+
+timeOfArrivalRight = []
+timeofArrivalLeft = []
+
+timeOfDepartureRight = []
+timeOfDepartureLeft = []
 
 timestep = 0
-while timestep < 10000:
-	time.sleep(0.1)
-	print_visualisation(lights)
+while timestep < 100000:
+	# time.sleep(0.1)
+	print (timestep)
+
 	for light in lights:
-		light.spawnEntities() # Spawns cars and pedestrians
+		l, r = light.spawnEntities(timestep) # Spawns cars and pedestrians
+		if l != 0:
+			timeofArrivalLeft.append(l)
+		if r != 0:
+			timeOfArrivalRight.append(r)
+			print ("arrive right")
 	for light in lights:
 		if (light.stepCounter >= light.minimumTimeSteps):
 			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
 		else:
-			light.move() # Light moves cars or pedestrians
-
+			c, lDep, rDep = light.move(timestep) # Light moves cars or pedestrians
+			if c == 3:
+				totalThroughPed += 1
+			elif c <= 2:
+				totalThroughCars += c
+			if lDep != 0:
+				timeOfDepartureLeft.append(lDep)
+			if rDep != 0:
+				timeOfDepartureRight.append(rDep)
+				print ("departed right")
 	if lightsToEvaluate:
 		for light in lightsToEvaluate:
 			light.evaluateChange() # Gives each light hat has run the given timesteps to evaluate if it should have green or red light
 		lightsToEvaluate = []
 	timestep += 1
+
+print_visualisation(lights)
+print ("TotalThroughPutCars: ", totalThroughCars)
+print ("TotalThroughPutPedestrians: ", totalThroughPed)
+
+avg_wait_right = 0
+for i in range (len(timeOfDepartureRight)):
+	avg_wait_right += timeOfDepartureRight[i] - timeOfArrivalRight[i]
+avg_wait_right = avg_wait_right/(len(timeOfDepartureRight))
+print ("avg_wait_right", avg_wait_right)
+
+avg_wait_left = 0
+for i in range (len(timeOfDepartureLeft)):
+	avg_wait_left += timeOfDepartureLeft[i] - timeofArrivalLeft[i]
+avg_wait_left = avg_wait_left/(len(timeOfDepartureLeft))
+print ("avg_wait_left", avg_wait_left)
