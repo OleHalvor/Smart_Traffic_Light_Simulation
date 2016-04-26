@@ -3,7 +3,7 @@ def midle_utility(l,averageChanceCar,spawnPedestrianChance):
 	if spawnPedestrianChance == 0:
 		cars_to_peds_weight = 3
 	else:
-		cars_to_peds_weight = 3 * (spawnChanceRight/spawnPedestrianChance)
+		cars_to_peds_weight = 3 * (averageChanceCar/spawnPedestrianChance)
 
 	# print("utility middle")
 	utility = []
@@ -61,7 +61,7 @@ def leftmost_utility(l,averageChanceCar,spawnPedestrianChance):
 	if spawnPedestrianChance == 0:
 		cars_to_peds_weight = 3
 	else:
-		cars_to_peds_weight = 3 * (spawnChanceRight/spawnPedestrianChance)
+		cars_to_peds_weight = 3 * (averageChanceCar/spawnPedestrianChance)
 	utility = []
 
 	if l.rightNeighbour.isGreen:
@@ -92,7 +92,7 @@ def rightmost_utility(l,averageChanceCar,spawnPedestrianChance):
 	if spawnPedestrianChance == 0:
 		cars_to_peds_weight = 3
 	else:
-		cars_to_peds_weight = 3 * (spawnChanceRight/spawnPedestrianChance)
+		cars_to_peds_weight = 3 * (averageChanceCar/spawnPedestrianChance)
 	# print("utility right")
 	utility = []
 

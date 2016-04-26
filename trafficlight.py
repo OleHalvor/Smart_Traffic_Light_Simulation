@@ -19,13 +19,13 @@ class trafficLight:
 	def __init__(self, utility_function, overlapTime, minimumTimeSteps, spawnChanceLeft, spawnChanceRight, spawnPedestrianChance):
 		self.utility_function      = utility_function
 		self.overlapTime           = overlapTime
-		self.minimumTimeSteps      = minimumTimeSteps# + (rng.random()*4)
+		self.minimumTimeSteps      = minimumTimeSteps + (rng.random()*4)
 		self.spawnChanceLeft       = spawnChanceLeft
 		self.spawnChanceRight      = spawnChanceRight
 		self.spawnPedestrianChance = spawnPedestrianChance
 
 	def evaluateChange(self,averageChanceCar,spawnPedestrianChance): # Use utility function here
-		flipswitch = True
+		flipswitch = False
 		if not flipswitch:
 			if self.utility_function(self,averageChanceCar,spawnPedestrianChance) == 0:
 				self.isGreen = True

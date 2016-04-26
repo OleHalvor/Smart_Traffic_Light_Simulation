@@ -4,11 +4,11 @@ import utility as UTIL
 import time
 # -- Default values --
 overlapTime           = 2
-minimumTimeSteps      = 20
-spawnChanceLeft       = 0.6
+minimumTimeSteps      = 18
+spawnChanceLeft       = 0.2
 spawnChanceRight      = 0.6
 averageChanceCar = (spawnChanceRight+spawnChanceLeft)/2
-spawnPedestrianChance = 0
+spawnPedestrianChance = 0.1
 # -- Default values --
 
 def createTrafficLights(n):
@@ -61,9 +61,9 @@ avg_ped_wait = []
 
 timestep = 0
 while timestep < 100000:
-	#time.sleep(0.1)
+	time.sleep(0.5)
 	print (timestep)
-	#print_visualisation(lights)
+	print_visualisation(lights)
 
 	for light in lights:
 		l, r = light.spawnEntities(timestep) # Spawns cars and pedestrians
@@ -118,5 +118,9 @@ if spawnPedestrianChance != 0:
 print ("total wait time cars: ", avg_wait_cars*totalThroughCars)
 if spawnPedestrianChance != 0:
 	print ("total wait time peds: ", avg_ped_wait*totalThroughPed)
-print ("Total wait time: ", ((avg_ped_wait*totalThroughPed)+avg_wait_cars*totalThroughCars)/1000 )
+if spawnPedestrianChance != 0:
+	print ("Total wait time: ", ((avg_ped_wait*totalThroughPed)+avg_wait_cars*totalThroughCars)/1000 )
+else:
+	print ("Total wait time: ", (avg_wait_cars*totalThroughCars)/1000 )
+
 
