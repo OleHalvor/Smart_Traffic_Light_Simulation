@@ -25,14 +25,17 @@ class trafficLight:
 		self.spawnPedestrianChance = spawnPedestrianChance
 
 	def evaluateChange(self): # Use utility function here
-		# if self.utility_function(self) == 0:
-		# 	self.isGreen = True
-		# else:
-		# 	self.isGreen = False
-		if self.isGreen:
-			self.isGreen = False
+		flipswitch = False
+		if not flipswitch:
+			if self.utility_function(self) == 0:
+				self.isGreen = True
+			else:
+				self.isGreen = False
 		else:
-			self.isGreen = True
+			if self.isGreen:
+				self.isGreen = False
+			else:
+				self.isGreen = True
 		self.stepCounter = 0
 
 	def spawnEntities(self, timestep):
@@ -50,6 +53,7 @@ class trafficLight:
 			if (rng.random() < self.spawnPedestrianChance):
 				self.pedestrianCounter += 1
 				self.pedestrianArrivals.append(timestep)
+
 		return leftSpawn, rightSpawn
 
 
@@ -59,6 +63,7 @@ class trafficLight:
 		rDep = 0
 		lDep = 0
 		pedArr = []
+		pedmoved = 0
 		if self.isGreen:
 			if self.carCounterLeft  >= 1:
 				self.carCounterLeft -= 1
@@ -76,16 +81,19 @@ class trafficLight:
 					rDep = timestep
 
 		else:
+			pedmoved = self.pedestrianCounter
 			self.pedestrianCounter = 0
-			temp = 0
-			for i in range (len(self.pedestrianArrivals)):
-				temp += timestep - self.pedestrianArrivals[i]
-			pedArr = temp / (len(self.pedestrianArrivals))
+			if self.pedestrianArrivals:
+				temp = 0
+				for i in range (len(self.pedestrianArrivals)):
+					temp += timestep - self.pedestrianArrivals[i]
+				pedArr = temp / (len(self.pedestrianArrivals))
+				self.pedestrianArrivals = []
 
 
 
 		self.stepCounter += 1
-		return c, lDep, rDep, pedArr
+		return c, lDep, rDep, pedArr, pedmoved
 
 
 

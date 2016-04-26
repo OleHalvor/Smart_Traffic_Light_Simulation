@@ -7,7 +7,7 @@ overlapTime           = 2
 minimumTimeSteps      = 18
 spawnChanceLeft       = 0.4
 spawnChanceRight      = 0.4
-spawnPedestrianChance = 0.5
+spawnPedestrianChance = 0.1
 # -- Default values --
 
 def createTrafficLights(n):
@@ -59,10 +59,10 @@ timeOfDepartureLeft = []
 avg_ped_wait = []
 
 timestep = 0
-while timestep < 10000:
-	time.sleep(0.1)
+while timestep < 100000:
+	#time.sleep(0.1)
 	print (timestep)
-	print_visualisation(lights)
+	#print_visualisation(lights)
 
 	for light in lights:
 		l, r = light.spawnEntities(timestep) # Spawns cars and pedestrians
@@ -74,18 +74,15 @@ while timestep < 10000:
 		if (light.stepCounter >= light.minimumTimeSteps):
 			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
 		else:
-			c, lDep, rDep, pedArr = light.move(timestep) # Light moves cars or pedestrians
-			if c == 3:
-				totalThroughPed += 1
-			elif c <= 2:
-				totalThroughCars += c
+			c, lDep, rDep, pedArr, pedmoved = light.move(timestep) # Light moves cars or pedestrians
+			totalThroughCars += c
+			totalThroughPed += pedmoved
 			if lDep != 0:
 				timeOfDepartureLeft.append(lDep)
 			if rDep != 0:
 				timeOfDepartureRight.append(rDep)
 			if pedArr:
 				avg_ped_wait.append(pedArr)
-
 
 	if lightsToEvaluate:
 		for light in lightsToEvaluate:
@@ -101,17 +98,21 @@ avg_wait_right = 0
 for i in range (len(timeOfDepartureRight)):
 	avg_wait_right += timeOfDepartureRight[i] - timeOfArrivalRight[i]
 avg_wait_right = avg_wait_right/(len(timeOfDepartureRight))
-print ("avg_wait_right", avg_wait_right)
+
 
 avg_wait_left = 0
 for i in range (len(timeOfDepartureLeft)):
 	avg_wait_left += timeOfDepartureLeft[i] - timeofArrivalLeft[i]
 avg_wait_left = avg_wait_left/(len(timeOfDepartureLeft))
-print ("avg_wait_left", avg_wait_left)
+avg_wait_cars = (avg_wait_left+avg_wait_right)/2
+print ("avg_wait_cars", avg_wait_cars)
 
-# temp_ped_wait = 0
-# for i in avg_ped_wait:
-# 	temp_ped_wait += i
-# avg_ped_wait = temp_ped_wait / (len(avg_ped_wait))
-# print ("avg_ped_wait", avg_ped_wait)
+temp_ped_wait = 0
+for i in avg_ped_wait:
+	temp_ped_wait += i
+avg_ped_wait = temp_ped_wait / (len(avg_ped_wait))
+print ("avg_ped_wait", avg_ped_wait)
+
+print ("total wait time cars: ", avg_wait_cars*totalThroughCars)
+print ("total wait time peds: ", avg_ped_wait*totalThroughPed)
 
