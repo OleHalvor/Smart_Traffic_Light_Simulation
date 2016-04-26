@@ -1,4 +1,10 @@
-def midle_utility(l):
+
+def midle_utility(l,averageChanceCar,spawnPedestrianChance):
+	if spawnPedestrianChance == 0:
+		cars_to_peds_weight = 3
+	else:
+		cars_to_peds_weight = 3 * (spawnChanceRight/spawnPedestrianChance)
+
 	# print("utility middle")
 	utility = []
 	if l.rightNeighbour.isGreen:
@@ -7,7 +13,7 @@ def midle_utility(l):
 			carsLeft = max(l.carCounterLeft + min(l.leftNeighbour.minimumTimeSteps-l.leftNeighbour.stepCounter, l.leftNeighbour.carCounterLeft) - l.minimumTimeSteps, 0)
 			carsRight = max(l.carCounterRight + min(l.rightNeighbour.minimumTimeSteps-l.rightNeighbour.stepCounter, l.rightNeighbour.carCounterRight) - l.minimumTimeSteps, 0)
 
-			utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/3))
+			utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/cars_to_peds_weight))
 
 			#Få rødt lys
 			carsRight = max(l.carCounterRight + min(l.rightNeighbour.minimumTimeSteps-l.rightNeighbour.stepCounter, l.rightNeighbour.carCounterRight), 0)
@@ -18,7 +24,7 @@ def midle_utility(l):
 			carsLeft = max(l.carCounterLeft - l.minimumTimeSteps, 0)
 			carsRight = max(l.carCounterRight + min(l.rightNeighbour.minimumTimeSteps-l.rightNeighbour.stepCounter, l.rightNeighbour.carCounterRight) - l.minimumTimeSteps, 0)
 
-			utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/3))
+			utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/cars_to_peds_weight))
 
 			#Få roedt
 			carsRight = max(l.carCounterRight + min(l.rightNeighbour.minimumTimeSteps-l.rightNeighbour.stepCounter, l.rightNeighbour.carCounterRight), 0)
@@ -30,7 +36,7 @@ def midle_utility(l):
 			carsLeft = max(l.carCounterLeft + min(l.rightNeighbour.minimumTimeSteps-l.leftNeighbour.stepCounter, l.leftNeighbour.carCounterLeft) - l.minimumTimeSteps, 0)
 			carsRight = max(l.carCounterRight - l.minimumTimeSteps, 0)
 
-			utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/3))
+			utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/cars_to_peds_weight))
 
 			#Få rødt lys
 			carsLeft = max(l.carCounterLeft + min(l.leftNeighbour.minimumTimeSteps-l.leftNeighbour.stepCounter, l.leftNeighbour.carCounterLeft), 0)
@@ -41,7 +47,7 @@ def midle_utility(l):
 			carsLeft = max(l.carCounterLeft - l.minimumTimeSteps, 0)
 			carsRight = max(l.carCounterRight - l.minimumTimeSteps, 0)
 
-			utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/3))
+			utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/cars_to_peds_weight))
 
 			#Få roedt
 			carsRight = max(l.carCounterRight, 0)
@@ -50,8 +56,12 @@ def midle_utility(l):
 	#
 	return utility.index(min(utility))
 #
-def leftmost_utility(l):
+def leftmost_utility(l,averageChanceCar,spawnPedestrianChance):
 	# print("utility left")
+	if spawnPedestrianChance == 0:
+		cars_to_peds_weight = 3
+	else:
+		cars_to_peds_weight = 3 * (spawnChanceRight/spawnPedestrianChance)
 	utility = []
 
 	if l.rightNeighbour.isGreen:
@@ -59,7 +69,7 @@ def leftmost_utility(l):
 		#Få grønt, gitt han har grønt
 		carsRight = max(l.carCounterRight + min(l.rightNeighbour.minimumTimeSteps-l.rightNeighbour.stepCounter, l.rightNeighbour.carCounterRight) - l.minimumTimeSteps, 0)
 		carsLeft  = max(l.carCounterLeft + l.minimumTimeSteps*l.spawnChanceLeft - l.minimumTimeSteps, 0)
-		utility.append(carsRight + carsLeft + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/3))
+		utility.append(carsRight + carsLeft + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/cars_to_peds_weight))
 
 		#Få rødt lys
 		carsRight = max(l.carCounterRight + min(l.rightNeighbour.minimumTimeSteps-l.rightNeighbour.stepCounter, l.rightNeighbour.carCounterRight), 0)
@@ -69,7 +79,7 @@ def leftmost_utility(l):
 		#Få grønt, gitt han har rødt
 		carsRight = max(l.carCounterRight - l.minimumTimeSteps, 0)
 		carsLeft  = max(l.carCounterLeft + l.minimumTimeSteps*l.spawnChanceLeft - l.minimumTimeSteps, 0)
-		utility.append(carsRight + carsLeft + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/3))
+		utility.append(carsRight + carsLeft + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/cars_to_peds_weight))
 
 		#Få rødt lys
 		carsRight = max(l.carCounterRight, 0)
@@ -78,7 +88,11 @@ def leftmost_utility(l):
 	#
 	return utility.index(min(utility))
 #
-def rightmost_utility(l):
+def rightmost_utility(l,averageChanceCar,spawnPedestrianChance):
+	if spawnPedestrianChance == 0:
+		cars_to_peds_weight = 3
+	else:
+		cars_to_peds_weight = 3 * (spawnChanceRight/spawnPedestrianChance)
 	# print("utility right")
 	utility = []
 
@@ -88,7 +102,7 @@ def rightmost_utility(l):
 		carsLeft = max(l.carCounterLeft + min(l.leftNeighbour.minimumTimeSteps-l.leftNeighbour.stepCounter, l.leftNeighbour.carCounterLeft) - l.minimumTimeSteps, 0)
 		carsRight = max(l.carCounterRight + l.minimumTimeSteps*l.spawnChanceRight - l.minimumTimeSteps, 0)
 
-		utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/3))
+		utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/cars_to_peds_weight))
 
 		#Få rødt lys
 		carsLeft = max(l.carCounterLeft + min(l.leftNeighbour.minimumTimeSteps-l.leftNeighbour.stepCounter, l.leftNeighbour.carCounterLeft), 0)
@@ -99,7 +113,7 @@ def rightmost_utility(l):
 		carsLeft = max(l.carCounterLeft - l.minimumTimeSteps, 0)
 		carsRight = max(l.carCounterRight + l.minimumTimeSteps*l.spawnChanceRight - l.minimumTimeSteps, 0)
 
-		utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/3))
+		utility.append(carsLeft + carsRight + ((l.pedestrianCounter + l.minimumTimeSteps*l.spawnPedestrianChance)/cars_to_peds_weight))
 
 		#Få rødt lys
 		carsLeft = max(l.carCounterLeft, 0)

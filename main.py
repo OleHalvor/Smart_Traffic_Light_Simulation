@@ -4,10 +4,11 @@ import utility as UTIL
 import time
 # -- Default values --
 overlapTime           = 2
-minimumTimeSteps      = 18
-spawnChanceLeft       = 0.4
-spawnChanceRight      = 0.4
-spawnPedestrianChance = 0.1
+minimumTimeSteps      = 20
+spawnChanceLeft       = 0.6
+spawnChanceRight      = 0.6
+averageChanceCar = (spawnChanceRight+spawnChanceLeft)/2
+spawnPedestrianChance = 0
 # -- Default values --
 
 def createTrafficLights(n):
@@ -86,7 +87,7 @@ while timestep < 100000:
 
 	if lightsToEvaluate:
 		for light in lightsToEvaluate:
-			light.evaluateChange() # Gives each light hat has run the given timesteps to evaluate if it should have green or red light
+			light.evaluateChange(averageChanceCar,spawnPedestrianChance) # Gives each light hat has run the given timesteps to evaluate if it should have green or red light
 		lightsToEvaluate = []
 	timestep += 1
 
@@ -107,12 +108,15 @@ avg_wait_left = avg_wait_left/(len(timeOfDepartureLeft))
 avg_wait_cars = (avg_wait_left+avg_wait_right)/2
 print ("avg_wait_cars", avg_wait_cars)
 
-temp_ped_wait = 0
-for i in avg_ped_wait:
-	temp_ped_wait += i
-avg_ped_wait = temp_ped_wait / (len(avg_ped_wait))
-print ("avg_ped_wait", avg_ped_wait)
+if spawnPedestrianChance != 0:
+	temp_ped_wait = 0
+	for i in avg_ped_wait:
+		temp_ped_wait += i
+	avg_ped_wait = temp_ped_wait / (len(avg_ped_wait))
+	print ("avg_ped_wait", avg_ped_wait)
 
 print ("total wait time cars: ", avg_wait_cars*totalThroughCars)
-print ("total wait time peds: ", avg_ped_wait*totalThroughPed)
+if spawnPedestrianChance != 0:
+	print ("total wait time peds: ", avg_ped_wait*totalThroughPed)
+print ("Total wait time: ", ((avg_ped_wait*totalThroughPed)+avg_wait_cars*totalThroughCars)/1000 )
 
