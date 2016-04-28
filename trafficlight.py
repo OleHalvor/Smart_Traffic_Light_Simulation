@@ -9,20 +9,34 @@ class trafficLight:
 	overlapTime           = 0
 	pedestrianCounter     = 0
 	spawnPedestrianChance = 0
-	minimumTimeSteps      = 0
+	minimumTimeStepsPed   = 0
+	minimumTimeStepsCar   = 0
 	stepCounter           = 0
 	utility_function      = None #Function?
 	leftNeighbour         = None
 	rightNeighbour        = None
 	pedestrianArrivals    = []
 
-	def __init__(self, utility_function, overlapTime, minimumTimeSteps, spawnChanceLeft, spawnChanceRight, spawnPedestrianChance):
+	def __init__(self, utility_function, overlapTime, minimumTimeStepsCar, minimumTimeStepsPed, spawnChanceLeft, spawnChanceRight, spawnPedestrianChance):
 		self.utility_function      = utility_function
 		self.overlapTime           = overlapTime
-		self.minimumTimeSteps      = minimumTimeSteps + (rng.random()*4)
+		self.minimumTimeStepsCar   = minimumTimeStepsCar# + (rng.random()*4)
+		self.minimumTimeStepsPed   = minimumTimeStepsPed# + (rng.random()*4)
 		self.spawnChanceLeft       = spawnChanceLeft
 		self.spawnChanceRight      = spawnChanceRight
 		self.spawnPedestrianChance = spawnPedestrianChance
+
+	def getCurrentMinimum(self):
+		if (self.isGreen):
+			return self.minimumTimeStepsCar
+		else:
+			return self.minimumTimeStepsPed
+
+	def getRemainingSteps(self):
+		if (self.isGreen):
+			return self.minimumTimeStepsCar - self.stepCounter
+		else:
+			return self.minimumTimeStepsPed - self.stepCounter
 
 	def evaluateChange(self,averageChanceCar,spawnPedestrianChance): # Use utility function here
 		flipswitch = False

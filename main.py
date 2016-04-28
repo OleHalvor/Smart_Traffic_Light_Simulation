@@ -4,22 +4,23 @@ import utility as UTIL
 import time
 # -- Default values --
 overlapTime           = 2
-minimumTimeSteps      = 18
-spawnChanceLeft       = 0.2
-spawnChanceRight      = 0.6
+minimumTimeStepsCar   = 30
+minimumTimeStepsPed   = 20
+spawnChanceLeft       = 0.4
+spawnChanceRight      = 0.4
 averageChanceCar = (spawnChanceRight+spawnChanceLeft)/2
-spawnPedestrianChance = 0.1
+spawnPedestrianChance = 0.4
 # -- Default values --
 
 def createTrafficLights(n):
 	lightList = []
 	for i in range(n):
 		if i == 0:
-			lightList.append(TL.trafficLight(UTIL.leftmost_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
+			lightList.append(TL.trafficLight(UTIL.leftmost_utility,overlapTime,minimumTimeStepsCar, minimumTimeStepsPed,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
 		elif i == n-1:
-			lightList.append(TL.trafficLight(UTIL.rightmost_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
+			lightList.append(TL.trafficLight(UTIL.rightmost_utility,overlapTime,minimumTimeStepsCar, minimumTimeStepsPed,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
 		else:
-			lightList.append(TL.trafficLight(UTIL.midle_utility,overlapTime,minimumTimeSteps,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
+			lightList.append(TL.trafficLight(UTIL.midle_utility,overlapTime,minimumTimeStepsCar, minimumTimeStepsPed,spawnChanceLeft,spawnChanceRight,spawnPedestrianChance))
 		if (i>0): # If this is not the only light, set neighbours.
 			lightList[i].leftNeighbour      = lightList[i-1]
 			lightList[i].spawnChanceLeft    = 0
@@ -61,9 +62,9 @@ avg_ped_wait = []
 
 timestep = 0
 while timestep < 100000:
-	time.sleep(0.5)
+	# time.sleep(0.2)
 	print (timestep)
-	print_visualisation(lights)
+	#print_visualisation(lights)
 
 	for light in lights:
 		l, r = light.spawnEntities(timestep) # Spawns cars and pedestrians
@@ -72,7 +73,9 @@ while timestep < 100000:
 		if r != 0:
 			timeOfArrivalRight.append(r)
 	for light in lights:
-		if (light.stepCounter >= light.minimumTimeSteps):
+		if (light.isGreen) and (light.stepCounter >= light.minimumTimeStepsCar):
+			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
+		elif (not light.isGreen) and (light.stepCounter >= light.minimumTimeStepsPed):
 			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
 		else:
 			c, lDep, rDep, pedArr, pedmoved = light.move(timestep) # Light moves cars or pedestrians
