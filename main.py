@@ -1,4 +1,4 @@
-#MainloopfileYOLOSWAG
+#Mainloopfile
 import trafficlight as TL
 import utility as UTIL
 import time
@@ -6,9 +6,9 @@ import time
 overlapTime           = 2
 minimumTimeStepsCar   = 30
 minimumTimeStepsPed   = 20
-spawnChanceLeft       = 0.4
-spawnChanceRight      = 0.4
-averageChanceCar = (spawnChanceRight+spawnChanceLeft)/2
+spawnChanceLeft       = 0.55
+spawnChanceRight      = 0.55
+averageChanceCar      = (spawnChanceRight+spawnChanceLeft)/2
 spawnPedestrianChance = 0.4
 # -- Default values --
 
@@ -47,40 +47,39 @@ def print_visualisation(lights):
 	print (s+" | pedestrianCounter")
 	print("")
 
-lights = createTrafficLights(5)
-lightsToEvaluate = []
-totalThroughCars = 0
-totalThroughPed = 0
+lights = createTrafficLights(10) # This line generates the traffic lights. The input is the number of lights to be created
+lightsToEvaluate = [] # Used at the end of a timestep to see which lights needs to evaluate green/red
 
-timeOfArrivalRight = []
-timeofArrivalLeft = []
-
-timeOfDepartureRight = []
-timeOfDepartureLeft = []
-
-avg_ped_wait = []
+totalThroughCars = 0 	# Statistic purposes
+totalThroughPed = 0  	# Statistic purposes
+timeOfArrivalRight = [] # Statistic purposes
+timeofArrivalLeft = []  # Statistic purposes
+timeOfDepartureRight = [] # Statistic purposes
+timeOfDepartureLeft = []  # Statistic purposes
+avg_ped_wait = []   	# Statistic purposes
 
 timestep = 0
-while timestep < 100000:
-	# time.sleep(0.2)
-	print (timestep)
-	#print_visualisation(lights)
+while timestep < 100000: # This is the main loop. Each light may move one car in each direction per timestep if the light is green, or move all pedestrians if the light is red
+	print ("timestep #",timestep)
+	time.sleep(0.5)      # This is only to slow the visualization down
+	print_visualisation(lights) #Prints a visualization of the simulated lights.
 
 	for light in lights:
 		l, r = light.spawnEntities(timestep) # Spawns cars and pedestrians
 		if l != 0:
-			timeofArrivalLeft.append(l)
+			timeofArrivalLeft.append(l)	# A car was spawned on the left side (light[0])
 		if r != 0:
-			timeOfArrivalRight.append(r)
+			timeOfArrivalRight.append(r) # A car was spawned on the right side (light[-1])
 	for light in lights:
-		if (light.isGreen) and (light.stepCounter >= light.minimumTimeStepsCar):
-			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
-		elif (not light.isGreen) and (light.stepCounter >= light.minimumTimeStepsPed):
-			lightsToEvaluate.append(light) #Light has run for minimum time, and should evaluate a light change
+		if (light.isGreen) and (light.stepCounter >= light.minimumTimeStepsCar): #Light has run for minimum time, and should evaluate a light change
+			lightsToEvaluate.append(light)
+		elif (not light.isGreen) and (light.stepCounter >= light.minimumTimeStepsPed): #Light has run for minimum time, and should evaluate a light change
+			lightsToEvaluate.append(light)
 		else:
 			c, lDep, rDep, pedArr, pedmoved = light.move(timestep) # Light moves cars or pedestrians
+			#Lines below are for statistics only
 			totalThroughCars += c
-			totalThroughPed += pedmoved
+			totalThroughPed  += pedmoved
 			if lDep != 0:
 				timeOfDepartureLeft.append(lDep)
 			if rDep != 0:
@@ -90,10 +89,12 @@ while timestep < 100000:
 
 	if lightsToEvaluate:
 		for light in lightsToEvaluate:
-			light.evaluateChange(averageChanceCar,spawnPedestrianChance) # Gives each light hat has run the given timesteps to evaluate if it should have green or red light
+			light.evaluateChange(averageChanceCar,spawnPedestrianChance) # Gives each light that has run the given timesteps to evaluate if it should turn green or red light
 		lightsToEvaluate = []
 	timestep += 1
 
+
+# The rest of the code is only for statistic purposes
 print_visualisation(lights)
 print ("TotalThroughPutCars: ", totalThroughCars)
 print ("TotalThroughPutPedestrians: ", totalThroughPed)

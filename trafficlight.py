@@ -12,7 +12,7 @@ class trafficLight:
 	minimumTimeStepsPed   = 0
 	minimumTimeStepsCar   = 0
 	stepCounter           = 0
-	utility_function      = None #Function?
+	utility_function      = None
 	leftNeighbour         = None
 	rightNeighbour        = None
 	pedestrianArrivals    = []
@@ -20,8 +20,8 @@ class trafficLight:
 	def __init__(self, utility_function, overlapTime, minimumTimeStepsCar, minimumTimeStepsPed, spawnChanceLeft, spawnChanceRight, spawnPedestrianChance):
 		self.utility_function      = utility_function
 		self.overlapTime           = overlapTime
-		self.minimumTimeStepsCar   = minimumTimeStepsCar# + (rng.random()*4)
-		self.minimumTimeStepsPed   = minimumTimeStepsPed# + (rng.random()*4)
+		self.minimumTimeStepsCar   = minimumTimeStepsCar + (rng.random()*4)
+		self.minimumTimeStepsPed   = minimumTimeStepsPed + (rng.random()*4)
 		self.spawnChanceLeft       = spawnChanceLeft
 		self.spawnChanceRight      = spawnChanceRight
 		self.spawnPedestrianChance = spawnPedestrianChance
@@ -52,9 +52,10 @@ class trafficLight:
 				self.isGreen = True
 		self.stepCounter = 0
 
+	#This method is called each timestep on each light to potentially generate cars/pedestrians
 	def spawnEntities(self, timestep):
-		leftSpawn = 0
-		rightSpawn = 0
+		leftSpawn = 0 #This is used to generate statistics
+		rightSpawn = 0#This is used to generate statistics
 		if self.spawnChanceLeft > 0:
 			if (rng.random() < self.spawnChanceLeft):
 				self.carCounterLeft    += 1
@@ -71,7 +72,7 @@ class trafficLight:
 		return leftSpawn, rightSpawn
 
 
-
+	#This is called each timestep on each light, and can one car in each direction if green, or all pedestrians if red.
 	def move(self, timestep):
 		c = 0
 		rDep = 0
@@ -88,13 +89,11 @@ class trafficLight:
 					lDep = timestep
 			if self.carCounterRight  >= 1:
 				self.carCounterRight -= 1
-
 				if self.leftNeighbour:
 					self.leftNeighbour.carCounterRight += 1
 				else:
 					c += 1
 					rDep = timestep
-
 		else:
 			pedmoved = self.pedestrianCounter
 			self.pedestrianCounter = 0
@@ -104,11 +103,8 @@ class trafficLight:
 					temp += timestep - self.pedestrianArrivals[i]
 				pedArr = temp / (len(self.pedestrianArrivals))
 				self.pedestrianArrivals = []
-
-
-
 		self.stepCounter += 1
-		return c, lDep, rDep, pedArr, pedmoved
+		return c, lDep, rDep, pedArr, pedmoved  #The returned values are soley used for statistics
 
 
 
